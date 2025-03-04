@@ -1,6 +1,9 @@
 from datetime import date
 from typing import List
 
+import os
+from dotenv import load_dotenv
+
 from flask import Flask, abort, render_template, redirect, url_for, flash, request
 from flask_ckeditor import CKEditor
 from flask_gravatar import Gravatar
@@ -15,9 +18,13 @@ import forms
 # Import your forms from the forms.py
 from forms import CreatePostForm
 
-
+# CREATE APP
 app = Flask(__name__)
-app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
+
+#LOAD ENV FILE
+
+load_dotenv(".env")
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 ckeditor = CKEditor(app)
 
 # TODO: Configure Flask-Login
@@ -27,7 +34,8 @@ login_manager.init_app(app)
 # CREATE DATABASE
 class Base(DeclarativeBase):
     pass
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
+
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DB_URI')
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
 
@@ -169,7 +177,7 @@ def show_post(post_id):
         flash('You Must Log In To Comment', 'error')
         return redirect(url_for('login'))
 
-    return render_template("post.html", post=requested_post,logged_in=current_user.is_authenticated,form=formvvvv)
+    return render_template("post.html", post=requested_post,logged_in=current_user.is_authenticated,form=form)
 
 
 # TODO: Use a decorator so only an admin user can create a new post
@@ -239,4 +247,4 @@ def load_user(user_id):
     return User.query.filter_by(id=user_id).first()
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5002)
+    app.run(debug=False)
