@@ -2,7 +2,7 @@ from datetime import date
 from typing import List
 
 import os
-from dotenv import load_dotenv
+
 
 from flask import Flask, abort, render_template, redirect, url_for, flash, request
 from flask_ckeditor import CKEditor
@@ -21,9 +21,7 @@ from forms import CreatePostForm
 # CREATE APP
 app = Flask(__name__)
 
-#LOAD ENV FILE
 
-load_dotenv(".env")
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 ckeditor = CKEditor(app)
 
