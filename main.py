@@ -33,7 +33,7 @@ login_manager.init_app(app)
 class Base(DeclarativeBase):
     pass
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DB_URI')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DB_URI','postgresql://postgres.jwqvecbatnbfkrqltzzm:GLMzPF387iO4ANnP@aws-0-us-east-1.pooler.supabase.com:6543/postgres')
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
 
