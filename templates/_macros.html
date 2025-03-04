@@ -1,0 +1,42 @@
+<!-- _macros.html -->
+{% macro render_field(field) %}
+    <div class="mb-3">
+        {{ field.label(class="form-label") }}
+        {{ field(class="form-control" + (" is-invalid" if field.errors else "")) }}
+        {% if field.errors %}
+            <div class="invalid-feedback">
+                {% for error in field.errors %}
+                    <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+{% endmacro %}
+
+{% macro render_checkbox(field) %}
+    <div class="mb-3 form-check">
+        {{ field(class="form-check-input") }}
+        {{ field.label(class="form-check-label") }}
+    </div>
+{% endmacro %}
+
+{% macro render_submit(field) %}
+    <div class="mb-3">
+        {{ field(class="btn btn-primary") }}
+    </div>
+{% endmacro %}
+
+{% macro render_form(form) %}
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}  <!-- This includes the CSRF token -->
+        {% for field in form %}
+            {% if field.type == "BooleanField" %}
+                {{ render_checkbox(field) }}
+            {% elif field.type == "SubmitField" %}
+                {{ render_submit(field) }}
+            {% elif field.name != "csrf_token" %}  <!-- Skip CSRF token explicitly -->
+                {{ render_field(field) }}
+            {% endif %}
+        {% endfor %}
+    </form>
+{% endmacro %}
